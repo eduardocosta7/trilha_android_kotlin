@@ -1,41 +1,52 @@
 package br.com.alura.orgs.ui.recycler.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import br.com.alura.orgs.R
+import br.com.alura.orgs.databinding.ProdutoItemBinding
 import br.com.alura.orgs.model.Produto
 
 class ListaProdutoAdapter(
     private val context: Context,
-    private val produtos: List<Produto>
+    produtos: List<Produto>,
 ) : RecyclerView.Adapter<ListaProdutoAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private val dataSet = produtos.toMutableList()
+
+    class ViewHolder(binding: ProdutoItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val nome = binding.nome
+        private val descricao = binding.descricao
+        private val valor = binding.valor
+
+        fun vincula(produto: Produto) {
+            val nome = nome
+            nome.text = produto.nome
+            val descricao = descricao
+            descricao.text = produto.descricao
+            val valor = valor
+            valor.text = produto.valor.toPlainString()
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.produto_item, parent, false)
-        return ViewHolder(view)
+        val binding = ProdutoItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val produto = produtos[position]
+        val produto = dataSet[position]
         holder.vincula(produto)
     }
 
-    override fun getItemCount(): Int = produtos.size
+    override fun getItemCount(): Int = dataSet.size
 
-}
+    @SuppressLint("NotifyDataSetChanged")
+    fun atualiza(produtos: List<Produto>) {
+        this.dataSet.clear()
+        this.dataSet.addAll(produtos)
+        notifyDataSetChanged()
+    }
 
-private fun RecyclerView.ViewHolder.vincula(produto: Produto) {
-    val nome = itemView.findViewById<TextView>(R.id.nome)
-    nome.text = produto.nome
-    val descricao = itemView.findViewById<TextView>(R.id.descricao)
-    descricao.text = produto.descricao
-    val valor = itemView.findViewById<TextView>(R.id.valor)
-    valor.text = produto.valor.toPlainString()
 }

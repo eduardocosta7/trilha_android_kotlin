@@ -5,11 +5,11 @@ import br.com.alura.orgs.model.Produto
 class ProdutoDao {
 
     fun adiciona(produto: Produto){
-        Companion.produtos.add(produto)
+        produtos.add(produto)
     }
 
     fun buscaTodos() : List<Produto> {
-        return Companion.produtos.toList()
+        return produtos.toList()
     }
 
     companion object {
