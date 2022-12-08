@@ -1,10 +1,13 @@
 package br.com.alura.orgs.ui.activity
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.alura.orgs.R
 import br.com.alura.orgs.dao.ProdutoDao
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
@@ -27,6 +30,18 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+
+        AlertDialog.Builder(this)
+            .setTitle("Teste")
+            .setMessage("Teste")
+            .setView(R.layout.formulario_imagem)
+            .setPositiveButton("Confirmar") { _, _ ->
+
+            }
+            .setNegativeButton("Cancelar") {_, _ ->
+
+            }
+            .show()
     }
 
     override fun onResume() {
