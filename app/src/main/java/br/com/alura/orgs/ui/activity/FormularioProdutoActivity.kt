@@ -2,11 +2,14 @@ package br.com.alura.orgs.ui.activity
 
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import br.com.alura.orgs.R
 import br.com.alura.orgs.dao.ProdutoDao
 import br.com.alura.orgs.databinding.ActivityFormularioProdutoBinding
+import br.com.alura.orgs.databinding.FormularioImagemBinding
 import br.com.alura.orgs.model.Produto
+import coil.load
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -14,11 +17,34 @@ class FormularioProdutoActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
+    private var url: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraBotaoSalvar()
+        binding.activityFormularioProdutoImagem.setOnClickListener {
+
+            val formularioImagemBinding = FormularioImagemBinding.inflate(layoutInflater)
+            formularioImagemBinding.apply {
+                btnFormularioImg.setOnClickListener {
+                    val url = textUrl.text.toString()
+                    formularioImg.load(url)
+                }
+            }
+
+            AlertDialog.Builder(this)
+                .setView(formularioImagemBinding.root)
+                .setPositiveButton("Confirmar") { _, _ ->
+                    url = formularioImagemBinding.textUrl.text.toString()
+                    binding.activityFormularioProdutoImagem.load(url)
+                }
+                .setNegativeButton("Cancelar") { alert, _ ->
+                    alert.dismiss()
+                }
+                .show()
+
+        }
     }
 
     private fun configuraBotaoSalvar() {
@@ -45,7 +71,8 @@ class FormularioProdutoActivity : AppCompatActivity() {
         return Produto(
             nome,
             descricao,
-            valor
+            valor,
+            url
         )
     }
 

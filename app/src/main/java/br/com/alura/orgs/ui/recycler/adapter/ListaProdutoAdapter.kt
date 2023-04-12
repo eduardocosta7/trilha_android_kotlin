@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.alura.orgs.databinding.ProdutoItemBinding
 import br.com.alura.orgs.model.Produto
+import coil.load
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -18,19 +19,20 @@ class ListaProdutoAdapter(
 
     private val dataSet = produtos.toMutableList()
 
-    class ViewHolder(binding: ProdutoItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val nome = binding.nome
-        private val descricao = binding.descricao
-        private val valor = binding.valor
+    class ViewHolder(private val binding: ProdutoItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun vincula(produto: Produto) {
-            val nome = nome
-            nome.text = produto.nome
-            val descricao = descricao
-            descricao.text = produto.descricao
-            val valor = valor
-            val valorEmMoeda = formataParaMoedaBrasileira(produto.valor)
-            valor.text = valorEmMoeda
+            binding.apply {
+                val nome = nome
+                nome.text = produto.nome
+                val descricao = descricao
+                descricao.text = produto.descricao
+                val valor = valor
+                val valorEmMoeda = formataParaMoedaBrasileira(produto.valor)
+                valor.text = valorEmMoeda
+                imageView.load(produto.imagem)
+            }
         }
 
         private fun formataParaMoedaBrasileira(valor: BigDecimal): String? {
