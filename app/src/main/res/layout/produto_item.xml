@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -22,11 +23,12 @@
             android:ellipsize="end"
             android:fontFamily="@font/montserrat_bold"
             android:maxLines="1"
+            android:paddingEnd="10dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight="7"
             app:layout_constraintStart_toEndOf="@id/imageView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.7"
             tools:text="@tools:sample/lorem/random" />
 
         <TextView
@@ -36,6 +38,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/montserrat"
             android:maxLines="1"
+            android:paddingEnd="10dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@id/nome"
             app:layout_constraintStart_toStartOf="@id/nome"
@@ -68,12 +71,15 @@
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:paddingEnd="10dp"
             android:scaleType="centerCrop"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/nome"
+            app:layout_constraintHeight="3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.3"
             app:srcCompat="@drawable/produto_1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

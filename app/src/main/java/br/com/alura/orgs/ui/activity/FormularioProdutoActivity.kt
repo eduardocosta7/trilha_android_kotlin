@@ -2,14 +2,13 @@ package br.com.alura.orgs.ui.activity
 
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import br.com.alura.orgs.R
 import br.com.alura.orgs.dao.ProdutoDao
 import br.com.alura.orgs.databinding.ActivityFormularioProdutoBinding
-import br.com.alura.orgs.databinding.FormularioImagemBinding
+import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
-import coil.load
+import br.com.alura.orgs.ui.dialog.FormularioImagemDialog
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity() {
@@ -22,28 +21,13 @@ class FormularioProdutoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        title = "Cadastrar produto"
         configuraBotaoSalvar()
         binding.activityFormularioProdutoImagem.setOnClickListener {
-
-            val formularioImagemBinding = FormularioImagemBinding.inflate(layoutInflater)
-            formularioImagemBinding.apply {
-                btnFormularioImg.setOnClickListener {
-                    val url = textUrl.text.toString()
-                    formularioImg.load(url)
-                }
+            FormularioImagemDialog(this@FormularioProdutoActivity).mostra(url) { imagem ->
+                url = imagem
+                binding.activityFormularioProdutoImagem.tentaCarregarImagem(url)
             }
-
-            AlertDialog.Builder(this)
-                .setView(formularioImagemBinding.root)
-                .setPositiveButton("Confirmar") { _, _ ->
-                    url = formularioImagemBinding.textUrl.text.toString()
-                    binding.activityFormularioProdutoImagem.load(url)
-                }
-                .setNegativeButton("Cancelar") { alert, _ ->
-                    alert.dismiss()
-                }
-                .show()
-
         }
     }
 
