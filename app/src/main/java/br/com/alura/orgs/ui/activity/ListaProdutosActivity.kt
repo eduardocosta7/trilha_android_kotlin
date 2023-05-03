@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import br.com.alura.orgs.dao.ProdutoDao
+import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,11 +16,10 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
     private val adapter by lazy {
-        ListaProdutoAdapter(this@ListaProdutosActivity, dao.buscaTodos())
+        ListaProdutoAdapter(this@ListaProdutosActivity)
     }
 
     private lateinit var fabAdd: FloatingActionButton
-    private val dao = ProdutoDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +30,9 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        adapter.atualiza(dao.buscaTodos())
+        val db = AppDatabase.instanciaDB(this)
+        val produtoDao = db.produtoDao()
+        adapter.atualiza(produtoDao.buscaTodos())
     }
 
     override fun onClick(v: View?) {

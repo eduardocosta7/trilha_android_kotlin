@@ -18,7 +18,7 @@ import java.util.*
 
 class ListaProdutoAdapter(
     private val context: Context,
-    produtos: List<Produto>,
+    produtos: List<Produto> = emptyList(),
 ) : RecyclerView.Adapter<ListaProdutoAdapter.ViewHolder>() {
 
     private val dataSet = produtos.toMutableList()
