@@ -6,8 +6,11 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import br.com.alura.orgs.R
 import br.com.alura.orgs.databinding.ProdutoItemBinding
 import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
@@ -41,7 +44,35 @@ class ListaProdutoAdapter(
                 mCardView.setOnClickListener {
                     onClick(produto)
                 }
+
+                mCardView.setOnLongClickListener {
+                    onLongClick(binding.root, produto)
+                }
             }
+        }
+
+        private fun onLongClick(v: View, produto: Produto) : Boolean {
+            val popupMenu = PopupMenu(context, v)
+            popupMenu.inflate(R.menu.menu_detalhes_produto)
+
+            popupMenu.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.menu_remover -> {
+                        Toast.makeText(context, "Removendo ${produto.nome}", Toast.LENGTH_SHORT).show()
+                        return@setOnMenuItemClickListener true
+                    }
+                    R.id.menu_editar -> {
+                        Toast.makeText(context, "Editando ${produto.nome}", Toast.LENGTH_SHORT).show()
+                        return@setOnMenuItemClickListener true
+                    }
+                    else -> {
+                        return@setOnMenuItemClickListener true
+                    }
+                }
+            }
+
+            popupMenu.show()
+            return true
         }
 
         private fun onClick(produto: Produto) {
