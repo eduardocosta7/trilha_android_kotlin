@@ -17,6 +17,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
     private var url: String? = null
+    private var idProduto = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,19 @@ class FormularioProdutoActivity : AppCompatActivity() {
                 binding.activityFormularioProdutoImagem.tentaCarregarImagem(url)
             }
         }
+
+        intent?.extras?.apply {
+            title = "Carregar produto"
+            val produto = getSerializable("PRODUTO") as Produto
+            idProduto = produto.id
+            url = produto.imagem
+            binding.apply {
+                activityFormularioProdutoImagem.tentaCarregarImagem(produto.imagem)
+                descricao.setText(produto.descricao)
+                nome.setText(produto.nome)
+                valor.setText(produto.valor.toPlainString())
+            }
+        }
     }
 
     private fun configuraBotaoSalvar() {
@@ -36,9 +50,15 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val db = AppDatabase.instanciaDB(this)
         val dao = db.produtoDao()
         botaoSalvar.setOnClickListener {
-            val novoProduto = criaProduto()
-            dao.salva(novoProduto)
-            finish()
+            val produtoNovo = criaProduto()
+
+            if(idProduto > 0) {
+                dao.atualiza(produtoNovo)
+                finish()
+            } else {
+                dao.salva(produtoNovo)
+                finish()
+            }
         }
     }
 
@@ -54,6 +74,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
             if (valorEmTexto.isBlank()) BigDecimal.ZERO else BigDecimal(valorEmTexto)
 
         return Produto(
+            idProduto,
             nome,
             descricao,
             valor,

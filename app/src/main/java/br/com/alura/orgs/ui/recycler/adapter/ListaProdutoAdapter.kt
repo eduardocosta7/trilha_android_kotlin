@@ -78,10 +78,7 @@ class ListaProdutoAdapter(
         private fun onClick(produto: Produto) {
             val intent = Intent(context, DetalheActivity::class.java).apply {
                 action = Intent.ACTION_SEND
-                putExtra("nome", produto.nome)
-                putExtra("descricao", produto.descricao)
-                putExtra("valor", formataParaMoedaBrasileira(produto.valor))
-                putExtra("imagem", produto.imagem)
+                putExtra("PRODUTO", produto)
             }
 
             startActivity(context, intent, null)
