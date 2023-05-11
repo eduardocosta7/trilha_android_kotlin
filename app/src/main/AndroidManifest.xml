@@ -23,7 +23,7 @@
             android:name=".ui.activity.FormularioProdutoActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.activity.DetalheActivity"
+            android:name=".ui.activity.DetalheProdutoActivity"
             android:exported="false" />
 
         <meta-data

@@ -14,7 +14,7 @@ import br.com.alura.orgs.R
 import br.com.alura.orgs.databinding.ProdutoItemBinding
 import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
-import br.com.alura.orgs.ui.activity.DetalheActivity
+import br.com.alura.orgs.ui.activity.DetalheProdutoActivity
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -76,9 +76,9 @@ class ListaProdutoAdapter(
         }
 
         private fun onClick(produto: Produto) {
-            val intent = Intent(context, DetalheActivity::class.java).apply {
+            val intent = Intent(context, DetalheProdutoActivity::class.java).apply {
                 action = Intent.ACTION_SEND
-                putExtra("PRODUTO", produto)
+                putExtra("PRODUTO_ID", produto.id)
             }
 
             startActivity(context, intent, null)
