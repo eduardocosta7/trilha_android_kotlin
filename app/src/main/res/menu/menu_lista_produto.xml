@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/nomDesc"
+        android:title="Nome desc"
+        app:showAsAction="never" />
+    <item android:id="@+id/nomAsc"
+        android:title="Nome asc"
+        app:showAsAction="never" />
+    <item android:id="@+id/desDes"
+        android:title="Descrição desc"
+        app:showAsAction="never" />
+    <item android:id="@+id/desAsc"
+        android:title="Descrição asc"
+        app:showAsAction="never" />
+    <item android:id="@+id/valorDesc"
+        android:title="Valor desc"
+        app:showAsAction="never" />
+    <item android:id="@+id/valorAsc"
+        android:title="Valor asc"
+        app:showAsAction="never" />
+    <item android:id="@+id/semOrdenacao"
+        android:title="Sem ordenação"
+        app:showAsAction="never" />
+</menu>

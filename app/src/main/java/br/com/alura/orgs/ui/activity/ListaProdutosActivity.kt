@@ -2,9 +2,12 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
@@ -17,6 +20,10 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
     }
     private val adapter by lazy {
         ListaProdutoAdapter(this@ListaProdutosActivity)
+    }
+
+    private val produtoDao by lazy {
+        AppDatabase.instanciaDB(this).produtoDao()
     }
 
     private lateinit var fabAdd: FloatingActionButton
@@ -57,5 +64,38 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
     private fun vaiParaFormularioProduto() {
         val intent = Intent(this@ListaProdutosActivity, FormularioProdutoActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_lista_produto, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.nomDesc -> {
+                adapter.atualiza(produtoDao.selectNomDesc())
+            }
+            R.id.nomAsc -> {
+                adapter.atualiza(produtoDao.selectNomAsc())
+            }
+            R.id.desDes -> {
+                adapter.atualiza(produtoDao.selectDesDesc())
+            }
+            R.id.desAsc -> {
+                adapter.atualiza(produtoDao.selectDesAsc())
+            }
+            R.id.valorDesc -> {
+                adapter.atualiza(produtoDao.selectValorDesc())
+            }
+            R.id.valorAsc -> {
+                adapter.atualiza(produtoDao.selectValorAsc())
+            }
+            R.id.semOrdenacao -> {
+                adapter.atualiza(produtoDao.buscaTodos())
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
