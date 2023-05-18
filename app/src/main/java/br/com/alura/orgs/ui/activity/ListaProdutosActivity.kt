@@ -12,6 +12,7 @@ import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.*
 
 class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -39,7 +40,13 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         super.onResume()
         val db = AppDatabase.instanciaDB(this)
         val produtoDao = db.produtoDao()
-        adapter.atualiza(produtoDao.buscaTodos())
+        val scope = MainScope()
+        scope.launch {
+            val produtos = withContext(Dispatchers.IO) {
+                produtoDao.buscaTodos()
+            }
+            adapter.atualiza(produtos)
+        }
     }
 
     override fun onClick(v: View?) {
