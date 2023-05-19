@@ -11,6 +11,11 @@ import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityDetalheBinding
 import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetalheProdutoActivity : AppCompatActivity() {
 
@@ -24,6 +29,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
 
     private var produto: Produto? = null
     private var produtoId: Int = 0
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +40,25 @@ class DetalheProdutoActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
+        buscaProduto()
+    }
 
-        produto = produtoDao.buscaPorId(produtoId)
+    @SuppressLint("SetTextI18n")
+    private fun buscaProduto() {
+        scope.launch {
+            produto = produtoDao.buscaPorId(produtoId)
 
-        produto?.let { produto ->
-            binding.apply {
-                mImageView.tentaCarregarImagem(produto.imagem)
-                mTextViewNome.text = produto.nome
-                mTextViewDescricao.text = produto.descricao
-                mTextValor.text = produto.valor.toString()
+            withContext(Main) {
+                produto?.let { produto ->
+                    binding.apply {
+                        mImageView.tentaCarregarImagem(produto.imagem)
+                        mTextViewNome.text = produto.nome
+                        mTextViewDescricao.text = produto.descricao
+                        mTextValor.text = produto.valor.toString()
+                    }
+                } ?: finish()
             }
-        } ?: finish()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,8 +69,10 @@ class DetalheProdutoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_remover -> {
-                produto?.let { produtoDao.deleta(it) }
-                finish()
+                scope.launch {
+                    produto?.let { produtoDao.deleta(it) }
+                    finish()
+                }
             }
             R.id.menu_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {

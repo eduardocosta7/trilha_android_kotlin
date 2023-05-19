@@ -2,8 +2,8 @@
   <library name="Gradle: io.coil-kt:coil-base:1.2.2@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/e57d7e8b28a608904c18bd1c8f25f3a7/transformed/jetified-coil-base-1.2.2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e57d7e8b28a608904c18bd1c8f25f3a7/transformed/jetified-coil-base-1.2.2/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e57d7e8b28a608904c18bd1c8f25f3a7/transformed/jetified-coil-base-1.2.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/e57d7e8b28a608904c18bd1c8f25f3a7/transformed/jetified-coil-base-1.2.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.coil-kt/coil-base/1.2.2/c2b612284cd089d3ec8bce639012f802daea8e83/coil-base-1.2.2-javadoc.jar!/" />
