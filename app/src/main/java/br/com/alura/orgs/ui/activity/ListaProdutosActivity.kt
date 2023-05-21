@@ -2,6 +2,7 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +30,8 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var fabAdd: FloatingActionButton
 
+    private val job = Job()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -36,12 +39,29 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         configuraFab()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
+    }
+
     override fun onResume() {
         super.onResume()
         val db = AppDatabase.instanciaDB(this)
         val produtoDao = db.produtoDao()
         val scope = MainScope()
-        scope.launch {
+
+        val handler = CoroutineExceptionHandler { _, exception ->
+            exception.printStackTrace()
+        }
+
+        scope.launch(job) {
+            repeat(1000) {
+                Log.i("Teste Job coritine", "onResume: $it")
+                delay(1000L)
+            }
+        }
+
+        scope.launch(handler + job) {
             val produtos = withContext(Dispatchers.IO) {
                 produtoDao.buscaTodos()
             }
@@ -79,7 +99,7 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.nomDesc -> {
                 adapter.atualiza(produtoDao.selectNomDesc())
             }
