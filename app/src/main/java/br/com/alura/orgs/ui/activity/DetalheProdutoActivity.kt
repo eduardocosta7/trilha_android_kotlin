@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityDetalheBinding
@@ -45,7 +46,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun buscaProduto() {
-        scope.launch {
+        lifecycleScope.launch {
             produto = produtoDao.buscaPorId(produtoId)
 
             withContext(Main) {
@@ -69,14 +70,14 @@ class DetalheProdutoActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_remover -> {
-                scope.launch {
+                lifecycleScope.launch {
                     produto?.let { produtoDao.deleta(it) }
                     finish()
                 }
             }
             R.id.menu_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
-                    putExtra("PRODUTO", produto)
+                    putExtra("PRODUTO_ID", produto?.id)
                     startActivity(this)
                 }
             }

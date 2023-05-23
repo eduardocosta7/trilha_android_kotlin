@@ -2,6 +2,7 @@ package br.com.alura.orgs.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityFormularioProdutoBinding
 import br.com.alura.orgs.extensions.tentaCarregarImagem
@@ -24,8 +25,6 @@ class FormularioProdutoActivity : AppCompatActivity() {
 
     private var url: String? = null
     private var produtoId = 0
-    private val scope = CoroutineScope(Dispatchers.IO)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +49,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
     }
 
     private fun tentaBuscarProduto() {
-        scope.launch {
+        lifecycleScope.launch {
             produtoDao.buscaPorId(produtoId)?.let {
                 preencheCampos(it)
             }
@@ -72,7 +71,7 @@ class FormularioProdutoActivity : AppCompatActivity() {
         val botaoSalvar = binding.btnSalvar
         botaoSalvar.setOnClickListener {
             val produtoNovo = criaProduto()
-            scope.launch {
+            lifecycleScope.launch {
                 produtoDao.salva(produtoNovo)
                 finish()
             }

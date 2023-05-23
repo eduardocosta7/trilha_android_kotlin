@@ -7,32 +7,32 @@ import br.com.alura.orgs.model.Produto
 interface ProdutoDao {
 
     @Query("SELECT * FROM PRODUTO")
-    fun buscaTodos() : List<Produto>
+    suspend fun buscaTodos() : List<Produto>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun salva(vararg produto: Produto)
+    suspend fun salva(vararg produto: Produto)
 
     @Delete
-    fun deleta(vararg produto: Produto)
+    suspend fun deleta(vararg produto: Produto)
 
     @Query("SELECT * FROM PRODUTO WHERE ID = :id")
-    fun buscaPorId(id: Int) : Produto?
+    suspend fun buscaPorId(id: Int) : Produto?
 
     @Query("SELECT * FROM PRODUTO ORDER BY nome desc")
-    fun selectNomDesc() : List<Produto>
+    suspend fun selectNomDesc() : List<Produto>
 
     @Query("SELECT * FROM PRODUTO ORDER BY nome asc")
-    fun selectNomAsc() : List<Produto>
+    suspend fun selectNomAsc() : List<Produto>
 
     @Query("SELECT * FROM PRODUTO ORDER BY descricao desc")
-    fun selectDesDesc() : List<Produto>
+    suspend fun selectDesDesc() : List<Produto>
 
     @Query("SELECT * FROM PRODUTO ORDER BY descricao asc")
-    fun selectDesAsc() : List<Produto>
+    suspend fun selectDesAsc() : List<Produto>
 
     @Query("SELECT * FROM PRODUTO ORDER BY valor desc")
-    fun selectValorDesc() : List<Produto>
+    suspend fun selectValorDesc() : List<Produto>
 
     @Query("SELECT * FROM PRODUTO ORDER BY valor asc")
-    fun selectValorAsc() : List<Produto>
+    suspend fun selectValorAsc() : List<Produto>
 }
