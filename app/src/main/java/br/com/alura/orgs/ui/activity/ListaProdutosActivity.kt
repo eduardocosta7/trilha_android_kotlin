@@ -2,7 +2,6 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,8 +12,7 @@ import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -29,41 +27,31 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         AppDatabase.instanciaDB(this).produtoDao()
     }
 
-    private lateinit var fabAdd: FloatingActionButton
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraRecyclerView()
-        configuraFab()
+        controles()
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun controles() {
         lifecycleScope.launch {
-            repeat(1000) {
-                Log.i("Teste Job coritine", "onResume: $it")
-                delay(1000L)
+            produtoDao.buscaTodos().collect {
+                adapter.atualiza(it)
             }
         }
 
-        lifecycleScope.launch {
-            val produtos = produtoDao.buscaTodos()
-            adapter.atualiza(produtos)
-        }
+        binding.btnAdd.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            fabAdd -> {
-                vaiParaFormularioProduto()
+        binding.apply {
+            when (v) {
+                btnAdd -> {
+                    vaiParaFormularioProduto()
+                }
             }
         }
-    }
-
-    private fun configuraFab() {
-        fabAdd = binding.btnAdd
-        fabAdd.setOnClickListener(this)
     }
 
     private fun configuraRecyclerView() {
@@ -104,7 +92,7 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
                     adapter.atualiza(produtoDao.selectValorAsc())
                 }
                 R.id.semOrdenacao -> {
-                    adapter.atualiza(produtoDao.buscaTodos())
+                    adapter.atualiza(produtoDao.selectSemFiltro())
                 }
             }
         }

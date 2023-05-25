@@ -14,9 +14,7 @@ import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DetalheProdutoActivity : AppCompatActivity() {
 
@@ -28,9 +26,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
         AppDatabase.instanciaDB(this).produtoDao()
     }
 
-    private var produto: Produto? = null
     private var produtoId: Int = 0
-    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +35,14 @@ class DetalheProdutoActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onResume() {
-        super.onResume()
-        buscaProduto()
-    }
+    private fun controles() {
+        intent?.extras?.apply {
+            produtoId = getInt("PRODUTO_ID", 0)
+        }
 
-    @SuppressLint("SetTextI18n")
-    private fun buscaProduto() {
         lifecycleScope.launch {
-            produto = produtoDao.buscaPorId(produtoId)
-
-            withContext(Main) {
-                produto?.let { produto ->
+            produtoDao.buscaPorId(produtoId).collect {
+                it?.let { produto ->
                     binding.apply {
                         mImageView.tentaCarregarImagem(produto.imagem)
                         mTextViewNome.text = produto.nome
@@ -71,23 +63,17 @@ class DetalheProdutoActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_remover -> {
                 lifecycleScope.launch {
-                    produto?.let { produtoDao.deleta(it) }
+                    produtoId.let { produtoDao.deleta(it) }
                     finish()
                 }
             }
             R.id.menu_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
-                    putExtra("PRODUTO_ID", produto?.id)
+                    putExtra("PRODUTO_ID", produtoId)
                     startActivity(this)
                 }
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun controles() {
-        intent?.extras?.apply {
-            produtoId = getInt("PRODUTO_ID", 0)
-        }
     }
 }
