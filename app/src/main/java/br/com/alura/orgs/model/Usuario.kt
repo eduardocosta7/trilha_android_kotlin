@@ -5,8 +5,16 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Usuario(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val nome: String,
-    val email: String,
+    val usuario: String,
     val senha: String
-)
+) {
+    constructor(nome: String, usuario: String, senha: String) : this(
+        id = 0,
+        nome = nome,
+        usuario = usuario,
+        senha = senha
+    )
+}

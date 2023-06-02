@@ -2,6 +2,7 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,7 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
+import br.com.alura.orgs.preferences.dataStore
+import br.com.alura.orgs.preferences.usuarioLogadoPreferences
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
@@ -27,6 +31,10 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         AppDatabase.instanciaDB(this).produtoDao()
     }
 
+    private val usuarioDao by lazy {
+        AppDatabase.instanciaDB(this).usuarioDao()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -36,8 +44,18 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun controles() {
         lifecycleScope.launch {
-            produtoDao.buscaTodos().collect {
-                adapter.atualiza(it)
+            launch {
+                produtoDao.buscaTodos().collect {
+                    adapter.atualiza(it)
+                }
+            }
+
+            dataStore.data.collect { preferences ->
+                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
+                    usuarioDao.buscaPorId(usuarioId).collect {
+                        Log.e("usuario", it.toString())
+                    }
+                }
             }
         }
 

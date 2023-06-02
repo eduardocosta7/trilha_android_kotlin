@@ -6,10 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
-import br.com.alura.orgs.database.dao.UsuarioDao
 import br.com.alura.orgs.databinding.ActivityCadastroBinding
 import br.com.alura.orgs.model.Usuario
-import br.com.alura.orgs.util.vaiPara
 import kotlinx.coroutines.launch
 
 class CadastroActivity : AppCompatActivity() {
@@ -48,10 +46,9 @@ class CadastroActivity : AppCompatActivity() {
 
     private fun ActivityCadastroBinding.criaNovoUsuario(): Usuario {
         val nome = edtNome.text.toString()
-        val email = edtUsuario.text.toString()
+        val usuario = edtUsuario.text.toString()
         val senha = edtSenha.text.toString()
 
-        val usuario = Usuario(nome, email, senha)
-        return usuario
+        return Usuario(nome, usuario, senha)
     }
 }
