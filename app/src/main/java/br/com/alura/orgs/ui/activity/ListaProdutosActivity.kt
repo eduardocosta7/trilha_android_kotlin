@@ -2,11 +2,11 @@ package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.orgs.R
@@ -15,10 +15,14 @@ import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
 import br.com.alura.orgs.preferences.dataStore
 import br.com.alura.orgs.preferences.usuarioLogadoPreferences
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
-import kotlinx.coroutines.flow.collect
+import br.com.alura.orgs.util.vaiPara
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
+class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
 
     private val binding by lazy {
         ActivityListaProdutosBinding.inflate(layoutInflater)
@@ -31,10 +35,6 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
         AppDatabase.instanciaDB(this).produtoDao()
     }
 
-    private val usuarioDao by lazy {
-        AppDatabase.instanciaDB(this).usuarioDao()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -45,21 +45,19 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
     private fun controles() {
         lifecycleScope.launch {
             launch {
-                produtoDao.buscaTodos().collect {
-                    adapter.atualiza(it)
-                }
-            }
-
-            dataStore.data.collect { preferences ->
-                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
-                    usuarioDao.buscaPorId(usuarioId).collect {
-                        Log.e("usuario", it.toString())
-                    }
+                usuario.filterNotNull().collect {
+                    buscaProdutosUsuario()
                 }
             }
         }
 
         binding.btnAdd.setOnClickListener(this)
+    }
+
+    private suspend fun buscaProdutosUsuario() {
+        produtoDao.buscaTodos().collect {
+            adapter.atualiza(it)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -111,6 +109,9 @@ class ListaProdutosActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.semOrdenacao -> {
                     adapter.atualiza(produtoDao.selectSemFiltro())
+                }
+                R.id.sair -> {
+                    deslogaUsuario()
                 }
             }
         }

@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityCadastroBinding
 import br.com.alura.orgs.model.Usuario
+import br.com.alura.orgs.util.toast
 import kotlinx.coroutines.launch
 
 class CadastroActivity : AppCompatActivity() {
@@ -30,16 +31,19 @@ class CadastroActivity : AppCompatActivity() {
         binding.apply {
             btnCadastrar.setOnClickListener {
                 val usuario = criaNovoUsuario()
+                cadastra(usuario)
+            }
+        }
+    }
 
-                lifecycleScope.launch {
-                    try {
-                        dao.salva(usuario)
-                        finish()
-                    } catch (e: Exception) {
-                        Log.i("CriaUsuario", "${e.message}")
-                        Toast.makeText(this@CadastroActivity, "Falha ao cadastrar usuário", Toast.LENGTH_SHORT).show()
-                    }
-                }
+    private fun cadastra(usuario: Usuario) {
+        lifecycleScope.launch {
+            try {
+                dao.salva(usuario)
+                finish()
+            } catch (e: Exception) {
+                Log.i("CriaUsuario", "${e.message}")
+                toast("Falha ao cadastrar usuário")
             }
         }
     }
