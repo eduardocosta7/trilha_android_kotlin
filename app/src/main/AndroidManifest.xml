@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Orgs">
         <activity
+            android:name=".ui.activity.PerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.CadastroActivity"
             android:exported="false" />
         <activity

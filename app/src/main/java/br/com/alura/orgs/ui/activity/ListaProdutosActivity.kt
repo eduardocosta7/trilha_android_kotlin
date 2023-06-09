@@ -1,25 +1,17 @@
 package br.com.alura.orgs.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
-import br.com.alura.orgs.preferences.dataStore
-import br.com.alura.orgs.preferences.usuarioLogadoPreferences
 import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
 import br.com.alura.orgs.util.vaiPara
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
@@ -64,7 +56,7 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
         binding.apply {
             when (v) {
                 btnAdd -> {
-                    vaiParaFormularioProduto()
+                    vaiPara(FormularioProdutoActivity::class.java)
                 }
             }
         }
@@ -74,11 +66,6 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
         val recyclerView = binding.mRecycler
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this@ListaProdutosActivity)
-    }
-
-    private fun vaiParaFormularioProduto() {
-        val intent = Intent(this@ListaProdutosActivity, FormularioProdutoActivity::class.java)
-        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -110,8 +97,11 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
                 R.id.semOrdenacao -> {
                     adapter.atualiza(produtoDao.selectSemFiltro())
                 }
-                R.id.sair -> {
-                    deslogaUsuario()
+//                R.id.sair -> {
+//                    deslogaUsuario()
+//                }
+                R.id.perfil -> {
+                    vaiPara(PerfilActivity::class.java)
                 }
             }
         }
