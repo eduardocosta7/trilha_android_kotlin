@@ -12,7 +12,8 @@ data class Produto(
     var nome: String,
     var descricao: String,
     var valor: BigDecimal,
-    var imagem: String? = null
+    var imagem: String? = null,
+    var idUsuario: Int? = null
 ) : Serializable {
     constructor(nome: String, descricao: String, valor: BigDecimal, imagem: String?) :
             this(0, nome, descricao, valor, imagem)

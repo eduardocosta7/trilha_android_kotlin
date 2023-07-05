@@ -1,16 +1,13 @@
 package br.com.alura.orgs.ui.activity
 
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityFormularioProdutoBinding
 import br.com.alura.orgs.extensions.tentaCarregarImagem
 import br.com.alura.orgs.model.Produto
 import br.com.alura.orgs.ui.dialog.FormularioImagemDialog
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
@@ -26,6 +23,7 @@ class FormularioProdutoActivity : AppBaseActivity() {
 
     private var url: String? = null
     private var produtoId = 0
+    private var usuarioProduto = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +43,15 @@ class FormularioProdutoActivity : AppBaseActivity() {
 
         intent?.extras?.apply {
             produtoId = getInt("PRODUTO_ID", 0)
+            usuarioProduto = getBoolean("USUARIO_PRODUTO", false)
         }
 
+        if (usuarioProduto)
+            binding.usuario.visibility = View.VISIBLE
+        else
+            binding.usuario.visibility = View.GONE
+
         lifecycleScope.launch {
-            usuario.filterNotNull().collect {
-                Log.i("USUARIO", "controles: $it")
-            }
             produtoDao.buscaPorId(produtoId).collect {
                 it?.let { preencheCampos(it) }
             }
@@ -61,6 +62,7 @@ class FormularioProdutoActivity : AppBaseActivity() {
         title = "Alterar produto"
         url = produto.imagem
         binding.apply {
+            usuario.setText(produto.idUsuario.toString())
             activityFormularioProdutoImagem.tentaCarregarImagem(produto.imagem)
             descricao.setText(produto.descricao)
             nome.setText(produto.nome)
@@ -71,15 +73,18 @@ class FormularioProdutoActivity : AppBaseActivity() {
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.btnSalvar
         botaoSalvar.setOnClickListener {
-            val produtoNovo = criaProduto()
             lifecycleScope.launch {
-                produtoDao.salva(produtoNovo)
-                finish()
+                usuario.value?.let {
+                    val id = if (usuarioProduto) binding.usuario.text.toString().toInt() else it.id
+                    val produtoNovo = criaProduto(id)
+                    produtoDao.salva(produtoNovo)
+                    finish()
+                }
             }
         }
     }
 
-    private fun criaProduto(): Produto {
+    private fun criaProduto(idUsuario: Int): Produto {
         val campoNome = binding.nome
         val nome = campoNome.text.toString()
         val campoDescricao = binding.descricao
@@ -95,7 +100,8 @@ class FormularioProdutoActivity : AppBaseActivity() {
             nome,
             descricao,
             valor,
-            url
+            url,
+            idUsuario
         )
     }
 

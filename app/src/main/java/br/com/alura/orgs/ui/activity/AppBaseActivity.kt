@@ -1,5 +1,6 @@
 package br.com.alura.orgs.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.edit
@@ -20,8 +21,8 @@ abstract class AppBaseActivity : AppCompatActivity() {
         AppDatabase.instanciaDB(this).usuarioDao()
     }
 
-    private var _usuario: MutableStateFlow<Usuario?> = MutableStateFlow(null)
-    protected var usuario: StateFlow<Usuario?> = _usuario
+    private val _usuario: MutableStateFlow<Usuario?> = MutableStateFlow(null)
+    protected val usuario: StateFlow<Usuario?> = _usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +39,19 @@ abstract class AppBaseActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun buscaUsuario(usuarioId: Int) {
-        _usuario.value = usuarioDao.buscaPorId(usuarioId).firstOrNull()
+    private suspend fun buscaUsuario(usuarioId: Int) : Usuario? {
+        return usuarioDao
+            .buscaPorId(usuarioId)
+            .firstOrNull()
+            .also {
+                _usuario.value = it
+            }
     }
 
     private fun vaiParaLogin() {
-        vaiPara(LoginActivity::class.java)
+        vaiPara(LoginActivity::class.java) {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         finish()
     }
 

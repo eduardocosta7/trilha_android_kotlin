@@ -7,8 +7,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ProdutoDao {
 
-    @Query("SELECT * FROM PRODUTO")
+    @Query("SELECT * FROM PRODUTO ORDER BY idUsuario")
     fun buscaTodos() : Flow<List<Produto>>
+
+    @Query("SELECT * FROM PRODUTO WHERE idUsuario = :idUsuario")
+    fun buscaTodosUsuario(idUsuario: Int) : Flow<List<Produto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun salva(vararg produto: Produto)

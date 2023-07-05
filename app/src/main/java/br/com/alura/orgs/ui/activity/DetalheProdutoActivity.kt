@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.R
@@ -27,6 +28,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
     }
 
     private var produtoId: Int = 0
+    private var usuarioProduto: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
     private fun controles() {
         intent?.extras?.apply {
             produtoId = getInt("PRODUTO_ID", 0)
+            usuarioProduto = getBoolean("USUARIO_PRODUTO", false)
         }
 
         lifecycleScope.launch {
@@ -70,6 +73,7 @@ class DetalheProdutoActivity : AppCompatActivity() {
             R.id.menu_editar -> {
                 Intent(this, FormularioProdutoActivity::class.java).apply {
                     putExtra("PRODUTO_ID", produtoId)
+                    putExtra("USUARIO_PRODUTO", usuarioProduto)
                     startActivity(this)
                 }
             }

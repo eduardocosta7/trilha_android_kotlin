@@ -17,4 +17,8 @@ data class Usuario(
         usuario = usuario,
         senha = senha
     )
+
+    fun devolveProduto(): ArrayList<Produto> {
+        return ArrayList()
+    }
 }

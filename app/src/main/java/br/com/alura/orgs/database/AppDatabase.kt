@@ -11,7 +11,7 @@ import br.com.alura.orgs.database.dao.UsuarioDao
 import br.com.alura.orgs.model.Produto
 import br.com.alura.orgs.model.Usuario
 
-@Database(entities = [Produto::class, Usuario::class], version = 3, exportSchema = true)
+@Database(entities = [Produto::class, Usuario::class], version = 4, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun produtoDao() : ProdutoDao

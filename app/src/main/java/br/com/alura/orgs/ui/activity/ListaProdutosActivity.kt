@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaProdutosBinding
-import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoAdapter
+import br.com.alura.orgs.ui.recycler.adapter.ListaProdutoUsuarioAdapter
 import br.com.alura.orgs.util.vaiPara
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
@@ -20,9 +20,8 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
         ActivityListaProdutosBinding.inflate(layoutInflater)
     }
     private val adapter by lazy {
-        ListaProdutoAdapter(this@ListaProdutosActivity)
+        ListaProdutoUsuarioAdapter(this@ListaProdutosActivity)
     }
-
     private val produtoDao by lazy {
         AppDatabase.instanciaDB(this).produtoDao()
     }
@@ -37,8 +36,8 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
     private fun controles() {
         lifecycleScope.launch {
             launch {
-                usuario.filterNotNull().collect {
-                    buscaProdutosUsuario()
+                usuario.filterNotNull().collect { usuario ->
+                    buscaProdutosUsuario(usuario.id)
                 }
             }
         }
@@ -46,8 +45,8 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
         binding.btnAdd.setOnClickListener(this)
     }
 
-    private suspend fun buscaProdutosUsuario() {
-        produtoDao.buscaTodos().collect {
+    private suspend fun buscaProdutosUsuario(idUsuario: Int) {
+        produtoDao.buscaTodosUsuario(idUsuario).collect {
             adapter.atualiza(it)
         }
     }
@@ -76,6 +75,9 @@ class ListaProdutosActivity : AppBaseActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         lifecycleScope.launch {
             when (item.itemId) {
+                R.id.todosProdutos -> {
+                    vaiPara(ListaTodosProdutosActivity::class.java)
+                }
                 R.id.nomDesc -> {
                     adapter.atualiza(produtoDao.selectNomDesc())
                 }
